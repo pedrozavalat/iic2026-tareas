@@ -1,0 +1,28 @@
+body {
+    margin: 0 auto;
+    /* Puedes cambiar el color de fondo (background-color) si lo deseas */
+    background-color: lightblue;
+    max-width: 1200px;
+    min-width: 500px;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.columns {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+    width: 800px;
+}
+
+svg,
+img {
+    border: 1px solid gray;
+}
+
+/* COMPLETAR CON EL CSS ADICIONAL QUE CONSIDERES NECESARIO */
