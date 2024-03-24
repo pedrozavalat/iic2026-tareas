@@ -1,28 +1,120 @@
+/* Global variables */
+* {
+    box-sizing: border-box;
+}
+:root {
+    --stock-color-up: #5dfc65;
+    --stock-color-up-hov:#b3ffb7;
+    --stock-color-down:#fc2929;
+    --stock-color-down-hov:#fe6161;;
+    --stock-rect-border-color:#111427;
+    --text-color: #cdcbd8;
+    --body-bg-color: #210a36;
+    --chart-bg-color:linear-gradient(
+        180deg,
+        #812bcd,
+        #26103a,
+        #0f0117
+    );
+}
+
 body {
     margin: 0 auto;
-    /* Puedes cambiar el color de fondo (background-color) si lo deseas */
-    background-color: lightblue;
+    color: var(--text-color);
+    background-color: var(--body-bg-color);
     max-width: 1200px;
     min-width: 500px;
     text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+}
+
+/* Visualization Container */
+svg,
+img {
+    border-radius: 1rem;
+    background: var(--chart-bg-color);
+    
+    
+}
+
+h1, h3, h5 {
+    font-weight: 300;
+}
+
+h5 {
+    font-style: italic;
 }
 
 .row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    margin: 0 auto;
 }
 
 .columns {
     display: block;
-    padding: 10px;
-    margin: 10px;
-    width: 800px;
+    margin-top: 2rem;
 }
 
-svg,
-img {
-    border: 1px solid gray;
+
+#vis-title {
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: 300;
+    fill: white;
 }
 
-/* COMPLETAR CON EL CSS ADICIONAL QUE CONSIDERES NECESARIO */
+/* Visualization elements */
+
+rect {
+    stroke: var(--stock-rect-border-color);
+    stroke-width: 2px;
+}
+
+.up {
+    fill: var(--stock-color-up);
+}
+.down {
+    fill: var(--stock-color-down);
+}
+
+.up:hover {
+    stroke: var(--stock-color-up-hov);
+}
+.down:hover {
+    stroke: var(--stock-color-down-hov);
+}
+
+text {
+    fill: var(--text-color)
+}
+
+.tooltip {
+    background-color: #9e4ce5;
+    border: 3px solid #a969e1;
+    padding: 1rem;
+    margin: 0;
+    display: block;
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+    color: rgb(42, 5, 67);
+    text-align: start;
+    border-radius: 1rem;
+}
+
+.tooltip p {
+    font-size: .8rem;   
+}
+
+.tooltip ul {
+    list-style: none;
+    margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.bolder {
+    font-weight: bolder;
+}
