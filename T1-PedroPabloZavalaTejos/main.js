@@ -75,12 +75,12 @@ function joinData(data) {
   const mouseEnter = (event, data) => {
     const [x, y] = d3.pointer(event);
     const toolTipHTML = `
-      <span class="center bolder"><p>Date: ${data.date}</p></span>
+      <span class="center bolder"><p>Fecha: ${data.date}</p></span>
       <ul>
-        <li><p><span class="bolder">Maximum stock</span>: ${data.max}</p></li>
-        <li><p><span class="bolder">Minimum stock</span>: ${data.min}</p></li>
-        <li><p><span class="bolder">Start value</span>: ${data.start}</p></li>
-        <li><p><span class="bolder">End value</span>: ${data.end}</p></li>
+        <li><p><span class="bolder">Valor más alto de la acción</span>: ${data.max}</p></li>
+        <li><p><span class="bolder">Valor más bajo de la acción</span>: ${data.min}</p></li>
+        <li><p><span class="bolder">Valor inicial de la acción</span>: ${data.start}</p></li>
+        <li><p><span class="bolder">Valor final de la acción</span>: ${data.end}</p></li>
       </ul>
     `;
     
@@ -125,12 +125,12 @@ function joinData(data) {
     .attr("class", "down");
     
   svg.append("text")
-    .text("Positive trend")
+    .text("Ascenso")
     .attr("x", WIDTHVIS - MARGIN.left + 10)
     .attr("y", MARGIN.top + 5);
 
   svg.append("text")
-    .text("Negative trend")
+    .text("Descenso")
     .attr("x", WIDTHVIS - MARGIN.left + 10)
     .attr("y", MARGIN.top + 35);
 };
