@@ -1,8 +1,7 @@
 /*
-Fuentes bibliográficas:
+Referencias bibliográficas:
   1. Para hacer el tooltip me guie de la siguiente pagina
     How to add a tooltip in d3  - https://observablehq.com/@john-guerra/how-to-add-a-tooltip-in-d3
-
 */
 
 /* Constantes */
@@ -18,22 +17,18 @@ const MARGIN = {
 };
 const HEIGHTVIS = HEIGHT - MARGIN.top - MARGIN.bottom;
 const WIDTHVIS = WIDTH - MARGIN.left - MARGIN.right;
-const CHART_TITLE = "Acciones de Apple"
+const CHART_TITLE = "Acciones de Apple";
 
 const svg = d3.select("#vis")
   .attr("width", WIDTH)
-  .attr("height", HEIGHT)
+  .attr("height", HEIGHT);
   
-d3.select("body").append("div").attr("class", "tooltip")
-
+d3.select("body").append("div").attr("class", "tooltip");
 
 /* Funcion que incorpora los datos en la visualizacion */
 function joinData(data) {
-  console.log(data);
-
   const minStock = d3.min(data, d => d.min);
   const maxStock = d3.max(data, d => d.max);
-  
 
   const xScale = d3.scaleBand()
     .domain(data.map(d => d.date))
@@ -63,7 +58,7 @@ function joinData(data) {
   svg.append("text")
     .attr("transform", `translate(${WIDTH / 2.7} ${MARGIN.top - 10})`)
     .text(CHART_TITLE)
-    .attr("id", "vis-title")
+    .attr("id", "vis-title");
 
   // Vertical lines: stock minimum and maximum values
   svg.select("#axis-x")
@@ -72,40 +67,38 @@ function joinData(data) {
     .join("line")
     .attr("class", "stock-vertical-line")
     .attr("y1", (d) => yScale(d.min) - HEIGHTVIS)
-    .attr("y2", (d) => yScale(d.max) - HEIGHTVIS)
+    .attr("y2", (d) => yScale(d.max) - HEIGHTVIS);
   
-  // Rect: stock start and end values
+  // Rect
   const tooltip = d3.select(".tooltip");
-  /* Funcion que maneja eventosd el mouse al estar sobre un rect */
+  /* Funcion que maneja eventos del mouse al estar sobre un rect */
   const mouseEnter = (event, data) => {
     const [x, y] = d3.pointer(event);
-  
-    
-    
     const toolTipHTML = `
       <span class="center bolder"><p>Date: ${data.date}</p></span>
       <ul>
+        <li><p><span class="bolder">Maximum stock</span>: ${data.max}</p></li>
         <li><p><span class="bolder">Minimum stock</span>: ${data.min}</p></li>
-        <li><p><span class="bolder">Maximum stock</span>: ${data.min}</p></li>
         <li><p><span class="bolder">Start value</span>: ${data.start}</p></li>
         <li><p><span class="bolder">End value</span>: ${data.end}</p></li>
       </ul>
-    `
+    `;
     
     tooltip
       .style("top", `${HEIGHT + parseInt(y)}px`)
       .style("left", `${HEIGHTVIS + parseInt(x)}px`)
       .style("visibility", "visible")
       .attr("position", "absolute")
-      .html(toolTipHTML)
-  }
+      .html(toolTipHTML);
+  };
   /* Funcion que maneja los eventos del mouse al salir de un rect */
   const mouseOut = () => {
-    tooltip.html(``)
-      .style("visibility", "hidden")
-  }
+    tooltip
+      .html(``)
+      .style("visibility", "hidden");
+  };
   
-  // Componentes rect
+  // Creacion de rect's
   svg.select("#axis-x")
     .selectAll("li")
     .data(data)
@@ -116,39 +109,35 @@ function joinData(data) {
     .attr("height", (d) => Math.abs(yScale(d.end) - yScale(d.start)))
     .attr("class", (d) => d.start < d.end ? "stock-rect up" : "stock-rect down")
     .on('mouseenter', mouseEnter)
-    .on('mouseout', mouseOut)
+    .on('mouseout', mouseOut);
 
   // Legend
   svg.append("circle")
     .attr("cx", WIDTHVIS - MARGIN.left)
     .attr("cy", MARGIN.top)
     .attr("r", 5)
-    .attr("class", "up")
+    .attr("class", "up");
     
   svg.append("circle")
     .attr("cx", WIDTHVIS - MARGIN.left)
     .attr("cy", MARGIN.top + 30)
     .attr("r", 5)
-    .attr("class", "down")
+    .attr("class", "down");
     
   svg.append("text")
     .text("Positive trend")
     .attr("x", WIDTHVIS - MARGIN.left + 10)
-    .attr("y", MARGIN.top + 5)
+    .attr("y", MARGIN.top + 5);
 
   svg.append("text")
     .text("Negative trend")
     .attr("x", WIDTHVIS - MARGIN.left + 10)
-    .attr("y", MARGIN.top + 35)
-    
+    .attr("y", MARGIN.top + 35);
+};
 
-  
-}
-
-
-
-
+/* Funcion que carga los datos csv */
 function loadData() {
+  // Funcion que procesa los datos de csv al formato correspondiente (integer o string) 
   const processData = (data) => ({
     date: data.fecha,
     start: +data.inicio,
@@ -157,6 +146,7 @@ function loadData() {
     end: +data.fin,
   });
 
+  // Funcion que ordena las fechas desde antiguas a actuales. 
   const sortDataByDate = (data) => data.sort((a, b) => a.date - b.date);
 
   d3.csv(APPLE, processData)
@@ -166,8 +156,7 @@ function loadData() {
     }).catch((error) => {
       console.log(error);
     });
-  ;
-}
+};
 
-
+// Cargamos la visualización
 loadData();
