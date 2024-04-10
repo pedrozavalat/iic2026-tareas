@@ -1,0 +1,46 @@
+body {
+    margin: 0 auto;
+    /* Puedes cambiar el color de fondo (background-color) si lo deseas */
+    background-color: #2e2e2e;
+    color: rgb(217, 214, 214);
+    max-width: 1200px;
+    min-width: 500px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h5 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+svg {
+    border: solid 4px white;
+}
+
+.divLine {
+    margin-top: 30px;
+    height: 3px;
+    width: 100%;
+    background-color: rgb(126, 138, 138);
+}
+
+.textStart {
+    text-align: start;
+}
+
+.textStart li {
+    padding-top: 8px;
+}
+
+.textStart.legend span {
+    width: 15px;
+    height: 15px;
+    background-color: rgb(0, 0, 0);
+    display: inline-block;
+}
+
+/* Completar este archivo con los que estime conveniente */
+

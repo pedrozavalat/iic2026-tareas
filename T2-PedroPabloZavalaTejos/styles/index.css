@@ -1,0 +1,153 @@
+/* ----- COLOURS CONFIG -------- */
+:root {
+    --body-bg-color: linear-gradient(
+        180deg,
+        rgb(158, 85, 11),
+        rgb(0, 0, 0),
+        rgb(61, 4, 4)
+    );
+    --header-bg-color: rgb(200, 102, 5);
+    --header-bg-shdw:  rgb(247, 158, 69);
+    --header-title-color: rgb(255, 255, 255);
+    --header-title-shdw: rgb(255, 255, 255);
+    --header-text-color:  rgb(112, 57, 2);
+    --section-title-shdw: rgb(183, 183, 183);
+
+    --footer-bg-color: rgb(149, 38, 38);
+    --footer-bg-shdw:rgb(217, 29, 29);
+    
+}
+/* ----- GLOBAL TAGS -------- */
+
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+body {
+    background: var(--body-bg-color);
+    margin: 0 3rem 0 3rem;
+    font-size: 1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+}
+
+
+/* ----- COMMON TAGS -------- */
+
+h1, header p {
+    text-align: center;
+}
+
+header p {
+    color: var(--header-text-color);
+}
+
+header, section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header, section {
+    justify-content: center;
+}
+
+/* --------- HEADER --------- */
+
+header {
+    scroll-snap-align: start;
+    background-color: var(--header-bg-color);
+    border-radius: 0rem 0rem 1rem 1rem;
+}
+
+header {
+    padding: 1rem;
+    box-shadow: 0rem 1rem 3rem 1rem var(--header-bg-shdw);
+}
+
+header h1 {
+    color: var(--header-title-color);
+    text-shadow: 0rem 0rem 2rem var(--header-title-shdw);
+}
+
+
+/* --------- SECTION --------- */
+section {
+    scroll-snap-align: center;
+    height: 60vh;
+    padding: 1rem;
+    margin: 6rem 0;
+}
+section h1, section p {
+    text-shadow: 0rem 0rem 1.5rem var(--section-title-shdw);
+}
+
+#title {
+    font-size: 3.5rem;
+}
+
+#label {
+    font-style: italic;
+}
+
+button {
+    padding: 1rem 1.5rem;
+    margin: 0;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: .5rem;
+    text-transform: uppercase;
+    transition: .3s all ease-in-out;
+    cursor: pointer;
+}
+button a {
+    text-decoration: none;
+    color: white;
+    padding: 1rem 2rem;
+}
+button a:hover {
+    color: var(--body-bg-color);
+}
+button:hover {
+    background-color: white;
+}
+
+/* --------- FOOTER ---------- */
+footer {
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: start;
+    padding: 3rem;
+    flex-direction: column;
+    background-color: var(--footer-bg-color);
+    box-shadow: 0rem -1rem 5rem 1rem var(--footer-bg-shdw);
+    border-radius: 1rem 1rem 0 0;
+    color: rgb(219, 123, 123);
+}
+
+footer a {
+    text-decoration: none;
+    color: rgb(253, 151, 151);
+    transition: all .5s ease-in-out;
+}
+footer a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+.bolder {
+    font-weight: bold;
+    color: rgb(234, 157, 157);
+}
+.row {
+    display: inline-flex;
+    gap: 1rem;
+}
+

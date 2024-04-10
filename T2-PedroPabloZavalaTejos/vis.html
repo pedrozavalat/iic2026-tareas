@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <title>T02 - Dragon Ball</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dragon Ball Visualización</h1>
+        <button id="sound">ON Music 🎵</button>
+        <h2>Visualización 1 - Series</h2>
+        <ul class="legend textStart">
+            <li>
+                Cada conjunto de libro representa una serie: "Dragon Ball", "Dragon Ball GT" y "Dragon Ball Z".
+            </li>
+            <li>
+                Libro izquierdo: su altura codifica la cantidad de personajes extras en la serie. Tiene un
+                ancho constante y su color es <span id="legendMangaTrue"></span> para indicar que
+                la serie está basada en el manga, mientras que es <span id="legendMangaFalse"></span>
+                cuando la serie no está basada en manga.
+            </li>
+            <li>
+                Libro del medio: su ancho es proporcional a la cantidad de aventuras que tiene la serie y su color es
+                proporcional a la cantidad de capítulos: mientras más oscuro es el color, más capítulos tiene la serie.
+                Tiene un altura constante.
+            </li>
+            <li>
+                Libro derecho: su altura codifica la cantidad de personajes recurrentes en la serie. Tiene un ancho
+                constante y su color es único según la serie:
+                Es <span id="legendDB"></span> para Dragon ball,
+                <span id="legendDBZ"></span> para Dragon ball Z,
+                y es <span id="legendDBGT"></span> para Dragon Ball GT.
+            </li>
+            <li>
+                Texto: está debajo de cada conjunto con el nombre de la serie. El color del texto es igual al
+                color del libro derecho, es decir, de la serie que codifica.
+            </li>
+        </ul>
+        <div id="vis-1">
+        </div>
+        <div class="textStart">
+            <ul>
+                <li>Serie: <span id="detailName"></span></li>
+                <li>Capítulos: <span id="detailCaps"></span></li>
+                <li>Aventuras: <span id="detailAventuras"></span></li>
+                <li>Personajes Recurrentes: <span id="detailPersRecurrent"></span></li>
+                <li>Personajes Extras: <span id="detailPersExtras"></span></li>
+                <li>Basado en manga: <span id="detailPersManga"></span></li>
+            </ul>
+
+        </div>
+
+        <div class="divLine"></div>
+        <h2>Visualización 2 - Personajes de las series</h2>
+        <p>Esta visualización solo se verá después de seleccionar una serie en la visualización 1 o
+            desde los siguientes botones</p>
+        <div>
+            <h5>1. Selecionar serie</h5>
+            <button id="DragonBall">Dragon Ball</button>
+            <button id="DragonBallZ">Dragon Ball Z</button>
+            <button id="DragonBallGT">Dragon Ball GT</button>
+        </div>
+        <div>
+            <h5>2. Filtrar personajes</h5>
+            <button id="filter-button">Quienes aumentan su poder más de 10 veces</button>
+            <button id="filter-reset">Resetear filtro</button>
+        </div>
+        <div>
+            <h5>3. Ordenar por</h5>
+            <select id="order-by">
+                <option value="porDefecto" selected>-</option>
+                <option value="alfabético">Nombre</option>
+                <option value="poder_aumenta">NºPoder Aumenta</option>
+            </select>
+
+        </div>
+        <ul class="legend textStart">
+            <li>
+                Cada persona representa un personaje.
+            </li>
+            <li>
+                El color de la cabeza indica en cuál serie aparece por primera vez, mientras que el color del cuerpo
+                indica en cuál serie es más recurrente el personaje. Por consistencia, los colores de cada serie serán
+                los mismos que los utilizados en la visualización 1.
+            </li>
+            <li>
+                El largo del cuerpo codifica el poder promedio del persona.
+                Aquí se utiliza una escala logaritmica dada las grandes diferentes de valores.
+            </li>
+            <li>
+                El color del cuerpo representa la cantidad de aventuras en las que participó el personaje.
+                Se utiliza una escala divergente "Purpura-blanco-Verde" [d3.interpolatePRGn] donde el blanco (valor
+                intermedio) representa el valor del medio de aventuras entre los personajes en pantalla (la mediana).
+                Mientras más púrpura es el color, menos aventuras participó el personaje. En cambio,
+                mientras más verde es, en más aventuras participó.
+            </li>
+            <li>
+                El largo del brazo codifica el poder mínimo que tuve el personaje. Mietras más largo sea el brazo,
+                implica que su poder mínimo fue más alto.
+            </li>
+        </ul>
+        <div id="vis-2">
+            <h4 id="selected"></h4>
+        </div>
+    </div>
+    <script src="main.js"></script>
+    <script src="configuration.js"></script>
+</body>
+
+</html>
