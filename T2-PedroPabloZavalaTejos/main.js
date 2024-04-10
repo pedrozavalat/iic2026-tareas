@@ -69,17 +69,17 @@ function crearSeries() {
             
             
             // Escala categorica para el libro izquierdo
-            const escalaManga = d3.scaleOrdinal(d3.extent(series, d=>d.manga), d3.schemeObservable10); 
+            const escalaManga = d3.scaleOrdinal(d3.extent(series, d => d.manga), d3.schemeObservable10); 
             // Escala logaritmica para el libro de al medio. Entre mas claro el libro, menos capitulos
             // Mientras que, entre mas oscuro, mas capitulos (amarillo claro -> naranjo oscuro)
             const escalaCantCaps = d3.scaleLinear()
                 .domain(d3.extent(series, d => d.cantidad_caps))
                 .range(['white', 'black']); 
             
-            const escalaSeries = d3.scaleOrdinal(d3.extent(series, d=>d.serie), d3.schemeSet1); 
-            
+            const escalaSeries = d3.scaleOrdinal(d3.extent(series, d => d.serie), d3.schemeSet1); 
 
-            // Contenedor que presenta las 3 series de Dragon ball 
+            // Contenedor que presenta las 3 series de Dragon ball, donde creamos 
+            // 3 libros para cada serie. 
             const contenedorSeries = SVG1
                 .selectAll("g.series")
                 .data(series)
@@ -87,7 +87,7 @@ function crearSeries() {
                         // Tag <g> creado para cada serie
                         const gSeries = enter
                             .append("g")
-                            .attr("class", "libros");
+                            .attr("class", "serie");
                         // Libros izquierda (creado para cada serie)
                         gSeries.append("rect")
                             .attr('id', 'izquierda')
@@ -139,23 +139,52 @@ function crearSeries() {
                             .attr("height", 5)
                             .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH + escalaAnchura(d.aventuras)) 
                             .attr('y', (d) => escalaY(d.personajes_recurrentes) - MARGIN.bottom + DIF_TEJUELO)
+                        
+                        // Agregamos la interaccion de cada tag g.series al momento de entrar el mouse
+
+                        gSeries.on('mouseenter', (_, d) => {
+                            d3.select('#detailName').text(d.serie)
+                            d3.select('#detailCaps').text(d.cantidad_caps)
+                            d3.select('#detailAventuras').text(d.aventuras)
+                            d3.select('#detailPersRecurrent').text(d.personajes_recurrentes)
+                            d3.select('#detailPersExtras').text(d.personajes_extras)
+                            d3.select('#detailPersManga').text(d.manga)
+                        })
+                        gSeries.on('mouseleave', (_, d) => {
+                            d3.selectAll("span")
+                                .filter((_, i, e) => e[i].id.includes('detail'))
+                                .transition()
+                                .text('')
+                                
+                        })
                     },
                     update => update,
                     exit => exit
                 );
             
-            const legend = d3.selectAll('legend').select('li')
-            console.log(legend)
-        
-            
-            
-            
-            
+            // Editamos los spans segun si la serie se basa en Manga o no. 
+            d3.selectAll("span")
+                .filter((d, i, e) => e[i].id.includes("legendManga"))
+                .style('background-color', function() {
+                    const tipo = this.id.split("legendManga")[1];
+                    const basadoEnManga = tipo === "True" ? true : false;
+                    return escalaManga(basadoEnManga);
+            });
+
+            // Editamos los spans de cada serie para asignarles el mismo color que del libro
+            d3.selectAll("span")
+                .filter((d, i, e) => e[i].id.includes("legendDB")) // filtramos los spans que tengan "legendDB"
+                .style('background-color', function() {
+                    const tipo = this.id.split("legendDB")[1]
+                    return tipo.length === 0 
+                        ? escalaSeries('Dragon Ball') 
+                        : escalaSeries(`Dragon Ball ${tipo}`);
+            });
+
             
 
+            
 
-        // No olvides actualizar los <span> con el "style" de background-color
-        // según el color categóricos elegidos. Cada span tiene un ID único.
 
 
         /* 
