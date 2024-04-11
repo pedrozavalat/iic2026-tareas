@@ -24,6 +24,10 @@ const MARGIN = {
 SVG1.attr("width", WIDTH_VIS_1).attr("height", HEIGHT_VIS_1);
 SVG2.attr("width", WIDTH_VIS_2).attr("height", HEIGHT_VIS_2);
 
+// Definimos las escalas para poder usarlas en ambas visualizaciones. 
+let escalaManga;
+let escalaCantCaps; 
+let escalaSeries
 
 function crearSeries() {
     /* 
@@ -64,18 +68,19 @@ function crearSeries() {
             const escalaAnchura = d3.scaleLinear()
                 .domain([0, maxAnchura])
                 .range([0, 120]); 
-
+            
+            // ESCALAS 
             // Escala categorica para el libro izquierdo
-            const escalaManga = d3.scaleOrdinal(
+            escalaManga = d3.scaleOrdinal(
                 d3.extent(series, d => d.manga), d3.schemeObservable10
             ); 
             // Escala logaritmica para el libro de al medio. Entre mas claro el libro, menos 
             // capitulos. Mientras que, entre mas oscuro, mas capitulos.
-            const escalaCantCaps = d3.scaleLinear()
+            escalaCantCaps = d3.scaleLinear()
                 .domain(d3.extent(series, d => d.cantidad_caps))
                 .range(['white', 'black']); 
             
-            const escalaSeries = d3.scaleOrdinal(d3.extent(series, d => d.serie), d3.schemeSet1); 
+            escalaSeries = d3.scaleOrdinal(d3.extent(series, d => d.serie), d3.schemeSet1); 
 
             // Contenedor que presenta las 3 series de Dragon ball, donde creamos 
             // 3 libros para cada serie. 
@@ -154,6 +159,7 @@ function crearSeries() {
                 exit => exit
                 );
             
+            // LEYENDAS
             // Editamos los spans segun si la serie se basa en Manga o no. 
             d3.selectAll("span")
                 .filter((d, i, e) => e[i].id.includes("legendManga"))
@@ -162,7 +168,6 @@ function crearSeries() {
                     const basadoEnManga = tipo === "True" ? true : false;
                     return escalaManga(basadoEnManga);
             });
-
             // Editamos los spans de cada serie para asignarles el mismo color que del libro
             d3.selectAll("span")
                 .filter((_, i, e) => e[i].id.includes("legendDB")) // filtramos id con "legendDB"
@@ -172,6 +177,8 @@ function crearSeries() {
                         ? escalaSeries('Dragon Ball') 
                         : escalaSeries(`Dragon Ball ${tipo}`);
             });
+
+            // EVENTOS
             // Evento click sobre una serie. Cada vez que realizamos click, se resalta la 
             // serie clickeada y se opaca el resto. Ademas, actualizamos la visualizacion 2. 
             // ResaltarSerie(...) realiza la logica del click
@@ -201,7 +208,7 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
     let texto = `Serie: ${serie} - Filtrar: ${filtrar_dataset} - Orden: ${ordenar_dataset}`
     d3.selectAll("#selected").text(texto);
 
-    // Nos quedamos con los personajes asociados a la serie seleccionada
+    // Nos quedamos con los personajes asociados a la serie seleccionada !
     let datos = dataset.filter(d => {
         if (serie == "Dragon Ball") {
             return d.Dragon_ball == true;
@@ -213,11 +220,120 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
             return d.Dragon_ball_gt == true;
         }
     })
+    // Cantidad de personajes por fila 
+
+    const N = 5;
+    const RADIO_CABEZA = 10;
+    const RADIO_CS = 20; // Radio Cuerpo Superior (CS)
+    const ANCHO_BRAZO = 6;
+
+    const contenedorPersonajes = SVG2.selectAll('g.personaje')
+        .data(datos)
+        .join(
+            enter => {
+                // Creamos el tag g para cada personaje. 
+                const personaje = enter.append('g')
+                    .attr('class', 'personaje')
+                    .style('opacity', 0)
+                    .attr('transform', (d, i) => {
+                        let posX = (i % N) * 150;
+                        let posY = Math.floor(i / N) * 150;
+                        return `translate(${posX + 100}, ${posY + 100})`;
+                    }
+                );
+
+                personaje.transition('enterPersonaje').duration(500).style('opacity', 1); 
+                // ESCALAS
+                // Maximos para cada escalas
+                const maxPoderMinimo = d3.max(datos.map(d => d.poder_minimo)); 
+                const maxPoderPromedio = d3.max(datos.map(d => d.poder_promedio)); 
+                // Escala desde valores de poder minimo a pixeles entre 5 a 100. 
+                const escalaBrazo = d3.scaleLog().domain([1, maxPoderMinimo]).range([15, 40]);
+                // Escala de valores de poder promedio a pixeles entre 5 a 100. CI: Cuerpo inferior
+                const escalaLargoCI = d3.scaleLog().domain([1, maxPoderPromedio]).range([RADIO_CS, 80]); 
+
+                // Definimos las metricas de aventuras: minimo, maximo y mediana. 
+                const minAventura = d3.min(datos.map(d => d.aventuras)); 
+                const medianAventura= d3.median(datos.map(d => d.aventuras)); 
+                const maxAventura = d3.max(datos.map(d => d.aventuras)); 
+                // Definimos una escala divergente para los colores segun las aventuras de c/personaje
+                const escalaColorCI = d3.scaleDiverging(d3.interpolatePiYG)
+                    .domain([minAventura, medianAventura, maxAventura])
+                
+                // Definimos el brazo del personaje. El color sera amarillo para todos. 
+                personaje.append('ellipse')
+                    .attr('class', 'brazo')
+                    .attr('cx', 24)
+                    .attr('cy', 37)
+                    .attr('rx', d => escalaBrazo(d.poder_minimo))
+                    .attr('ry', ANCHO_BRAZO)
+                    .attr('transform', `rotate(${40}, ${24}, ${37})`)
+                    .attr('fill', 'yellow')
+                // Definimos la cabeza del personaje. 
+                personaje.append('circle')
+                    .attr('class', 'cabeza')
+                    .attr('r', RADIO_CABEZA)
+                    .attr('fill', d => escalaSeries(d.primera_serie));
+                
+                // Definimos el cuerpo superior. 
+                personaje.append('circle')
+                    .attr('class', 'cuerpo-superior')
+                    .attr('r', RADIO_CS)
+                    .attr('fill', d => escalaSeries(d.serie_recurrente))
+                    .attr('cx', 0)
+                    .attr('cy', 30)
+                // Definimos el cuerpo inferior
+                personaje.append('rect')
+                    .attr('class', 'cuerpo-inferior')
+                    .attr('x', -RADIO_CS)
+                    .attr('y', 30)
+                    .attr('fill', d => escalaColorCI(d.aventuras))
+                    .attr('width', 2 * RADIO_CS)
+                    .attr('height', d => escalaLargoCI(d.poder_promedio))
+                // Definimos el nombre de cada personaje 
+                personaje.append('text')
+                    .text(d => d.personaje)
+                    .attr('class', 'nombre')
+                    .attr('fill', 'lightgray')
+                    .attr('text-anchor', 'middle')
+                    .attr('x', 0)
+                    .attr('y', -20)
+                    
+                return personaje;
+            },
+            update => update,
+            exit => exit
+    );  
+
+    // EVENTOS
+    // Funcion que resalta un personaje sobre los demas
+    const resaltarPersonaje = (personajeActual) => {
+        // Opacamos el resto de los personajes
+        console.log(personajeActual)
+        contenedorPersonajes
+            .filter(d => d.personaje !== personajeActual)
+            .style('opacity', 0.1);
+        // Resaltamos el personaje con el mouse sobre él 
+        contenedorPersonajes
+            .filter(d => d.personaje == personajeActual)
+            .style('opacity', 1);
+    }
+    contenedorPersonajes.on('mouseover', (_, personajes) => {
+        resaltarPersonaje(personajes.personaje)
+    }); 
+    
+    contenedorPersonajes.on('mouseout', (_, personajeActual) => {
+        // restablecemos la opacidad para cada personaje. 
+        contenedorPersonajes
+            .filter(d => d.personaje !== personajeActual)
+            .style('opacity', 1);
+
+    })
 
     // 1. Filtrar, cuando corresponde, por poder_aumenta > 10
     // Completar aquí
     console.log(filtrar_dataset)
-
+    
 
     // 2. Ordenar, según corresponda, los personajes. Completar aquí
     console.log(ordenar_dataset)
@@ -228,9 +344,6 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
     // y NO en "dataset".
 
     console.log(datos)
-    // No olvides que está prohibido el uso de loop (no son necesarios)
-    // Y debes aplicar correctamente data-join
-    // ¡Mucho éxito 😁 !
 }
 
 
