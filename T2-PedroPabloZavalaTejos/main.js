@@ -31,7 +31,6 @@ function crearSeries() {
     la primeva visualización.
     En esta visualización están las 3 series que deben ser dibujadas aplicando data-join 
     */
-
     d3.csv(SERIES_URL, d3.autoType)
         .then(series => {
             console.log(series)
@@ -43,7 +42,7 @@ function crearSeries() {
             const escalaX = d3.scaleBand()
                 .domain(series.map(d => d.serie))
                 .range([0, WIDTH_VIS_1])
-                .padding(0.4); 
+                .paddingOuter(0.45)
 
             // Obtenemos la maxima altura entre barras para que sean comparables
             const maxPersonajeExtra = d3.max(series.map(d => d.personajes_extras));            
@@ -66,12 +65,12 @@ function crearSeries() {
                 .domain([0, maxAnchura])
                 .range([0, 120]); 
 
-            
-            
             // Escala categorica para el libro izquierdo
-            const escalaManga = d3.scaleOrdinal(d3.extent(series, d => d.manga), d3.schemeObservable10); 
-            // Escala logaritmica para el libro de al medio. Entre mas claro el libro, menos capitulos
-            // Mientras que, entre mas oscuro, mas capitulos (amarillo claro -> naranjo oscuro)
+            const escalaManga = d3.scaleOrdinal(
+                d3.extent(series, d => d.manga), d3.schemeObservable10
+            ); 
+            // Escala logaritmica para el libro de al medio. Entre mas claro el libro, menos 
+            // capitulos. Mientras que, entre mas oscuro, mas capitulos.
             const escalaCantCaps = d3.scaleLinear()
                 .domain(d3.extent(series, d => d.cantidad_caps))
                 .range(['white', 'black']); 
@@ -84,82 +83,75 @@ function crearSeries() {
                 .selectAll("g.series")
                 .data(series)
                 .join(enter => {
-                        // Tag <g> creado para cada serie
-                        const gSeries = enter
-                            .append("g")
-                            .attr("class", "serie");
-                        // Libros izquierda (creado para cada serie)
-                        gSeries.append("rect")
-                            .attr('id', 'izquierda')
-                            .attr("fill", (d) => escalaManga(d.manga))
-                            .attr('width', BOOK_WIDTH)
-                            .attr('height', (d) => escalaAltura(d.personajes_extras))
-                            .attr('x', (d) => escalaX(d.serie))
-                            .attr('y', (d) => escalaY(d.personajes_extras) - MARGIN.bottom)
-                        // Libros de al medio (creado para cada serie)
-                        gSeries.append("rect")
-                            .attr('id', 'medio')
-                            .attr('fill', d => escalaCantCaps(d.cantidad_caps))
-                            .attr('width', (d) => escalaAnchura(d.aventuras))
-                            .attr('height', BOOK_HEIGHT)
-                            .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH) 
-                            .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom - 80) 
-                        // Libros derecha (creado para cada serie)
-                        gSeries.append("rect")
-                            .attr('id', 'derecha')
-                            .attr('fill', d => escalaSeries(d.serie))
-                            .attr('width', BOOK_WIDTH)
-                            .attr('height', (d) => escalaAltura(d.personajes_recurrentes))
-                            .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH + escalaAnchura(d.aventuras)) 
-                            .attr('y', (d) => escalaY(d.personajes_recurrentes) - MARGIN.bottom)
+                    // Tag <g> creado para cada serie
+                    const gSeries = enter
+                        .append("g")
+                        .attr("class", "serie")
+                    // Libros izquierda (creado para cada serie)
+                    gSeries.append("rect")
+                        .attr('id', 'izquierda')
+                        .attr("fill", (d) => escalaManga(d.manga))
+                        .attr('width', BOOK_WIDTH)
+                        .attr('height', (d) => escalaAltura(d.personajes_extras))
+                        .attr('x', (d) => escalaX(d.serie))
+                        .attr('y', (d) => escalaY(d.personajes_extras) - MARGIN.bottom);
                         
-                        // Titulo debajo de cada serie, con el color segun la escala "escalaSeries"
-                        gSeries.append("text")
-                            .attr('x', (d) => escalaX(d.serie)) 
-                            .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom + 34) 
-                            .attr("fill", d => escalaSeries(d.serie))
-                            .text(d => d.serie)
+                    // Libros de al medio (creado para cada serie)
+                    gSeries.append("rect")
+                        .attr('id', 'medio')
+                        .attr('fill', d => escalaCantCaps(d.cantidad_caps))
+                        .attr('width', (d) => escalaAnchura(d.aventuras))
+                        .attr('height', BOOK_HEIGHT)
+                        .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH) 
+                        .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom - 80);
+                    // Libros derecha (creado para cada serie)
+                    gSeries.append("rect")
+                        .attr('id', 'derecha')
+                        .attr('fill', d => escalaSeries(d.serie))
+                        .attr('width', BOOK_WIDTH)
+                        .attr('height', (d) => escalaAltura(d.personajes_recurrentes))
+                        .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH + escalaAnchura(d.aventuras)) 
+                        .attr('y', (d) => escalaY(d.personajes_recurrentes) - MARGIN.bottom);
+                    
+                    // Titulo debajo de cada serie, con el color segun la escala "escalaSeries"
+                    gSeries.append("text")
+                        .attr('x', (d) => escalaX(d.serie)) 
+                        .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom + 34) 
+                        .attr("fill", d => escalaSeries(d.serie))
+                        .text(d => d.serie);
 
-                        // Agregamos los tejuelos para cada libro (izquierda, al medio, derecha). 
-                        gSeries.append("rect")
-                            .attr("fill", "magenta")
-                            .attr("width", BOOK_WIDTH)
-                            .attr("height", 5)
-                            .attr('x', (d) => escalaX(d.serie)) 
-                            .attr('y', (d) => escalaY(d.personajes_extras) - MARGIN.bottom + DIF_TEJUELO)
-                        gSeries.append("rect")
-                            .attr("fill", "magenta")
-                            .attr('width', (d) => escalaAnchura(d.aventuras))
-                            .attr("height", 5)
-                            .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH) 
-                            .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom - 80 + DIF_TEJUELO) 
-                        gSeries.append("rect")
-                            .attr("fill", "magenta")
-                            .attr('width', BOOK_WIDTH)
-                            .attr("height", 5)
-                            .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH + escalaAnchura(d.aventuras)) 
-                            .attr('y', (d) => escalaY(d.personajes_recurrentes) - MARGIN.bottom + DIF_TEJUELO)
-                        
-                        // Agregamos la interaccion de cada tag g.series al momento de entrar el mouse
-
-                        gSeries.on('mouseenter', (_, d) => {
-                            d3.select('#detailName').text(d.serie)
-                            d3.select('#detailCaps').text(d.cantidad_caps)
-                            d3.select('#detailAventuras').text(d.aventuras)
-                            d3.select('#detailPersRecurrent').text(d.personajes_recurrentes)
-                            d3.select('#detailPersExtras').text(d.personajes_extras)
-                            d3.select('#detailPersManga').text(d.manga)
-                        })
-                        gSeries.on('mouseleave', (_, d) => {
-                            d3.selectAll("span")
-                                .filter((_, i, e) => e[i].id.includes('detail'))
-                                .transition()
-                                .text('')
-                                
-                        })
-                    },
-                    update => update,
-                    exit => exit
+                    // Agregamos los tejuelos para cada libro (izquierda, al medio, derecha). 
+                    gSeries.append("rect")
+                        .attr("fill", "magenta")
+                        .attr("width", BOOK_WIDTH)
+                        .attr("height", 5)
+                        .attr('x', (d) => escalaX(d.serie)) 
+                        .attr('y', (d) => escalaY(d.personajes_extras) - MARGIN.bottom + DIF_TEJUELO);
+                    gSeries.append("rect")
+                        .attr("fill", "magenta")
+                        .attr('width', (d) => escalaAnchura(d.aventuras))
+                        .attr("height", 5)
+                        .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH) 
+                        .attr('y', HEIGHT_VIS_1 -  MARGIN.bottom - 80 + DIF_TEJUELO); 
+                    gSeries.append("rect")
+                        .attr("fill", "magenta")
+                        .attr('width', BOOK_WIDTH)
+                        .attr("height", 5)
+                        .attr('x', (d) => escalaX(d.serie) + BOOK_WIDTH + escalaAnchura(d.aventuras)) 
+                        .attr('y', (d) => escalaY(d.personajes_recurrentes) - MARGIN.bottom + DIF_TEJUELO);
+                    // Agregamos la interaccion de cada tag g.series al momento de entrar el mouse
+                    gSeries.on('mouseenter', (_, d) => {
+                        d3.select('#detailName').text(d.serie)
+                        d3.select('#detailCaps').text(d.cantidad_caps)
+                        d3.select('#detailAventuras').text(d.aventuras)
+                        d3.select('#detailPersRecurrent').text(d.personajes_recurrentes)
+                        d3.select('#detailPersExtras').text(d.personajes_extras)
+                        d3.select('#detailPersManga').text(d.manga)
+                    });
+                    return gSeries;
+                },
+                update => update,
+                exit => exit
                 );
             
             // Editamos los spans segun si la serie se basa en Manga o no. 
@@ -173,27 +165,31 @@ function crearSeries() {
 
             // Editamos los spans de cada serie para asignarles el mismo color que del libro
             d3.selectAll("span")
-                .filter((d, i, e) => e[i].id.includes("legendDB")) // filtramos los spans que tengan "legendDB"
+                .filter((_, i, e) => e[i].id.includes("legendDB")) // filtramos id con "legendDB"
                 .style('background-color', function() {
                     const tipo = this.id.split("legendDB")[1]
                     return tipo.length === 0 
                         ? escalaSeries('Dragon Ball') 
                         : escalaSeries(`Dragon Ball ${tipo}`);
             });
-
-            
-
-            
-
-
-
-        /* 
-        Cada vez que se haga click en un conjunto de libros. Debes llamar a
-        preprocesarPersonajes(serie, false) donde "serie" 
-        corresponde al nombre de la serie presionada.
-    
-        preprocesarPersonajes se encargará de ejecutar a crearPersonajes(...)
-        */
+            // Evento click sobre una serie. Cada vez que realizamos click, se resalta la 
+            // serie clickeada y se opaca el resto. Ademas, actualizamos la visualizacion 2. 
+            // ResaltarSerie(...) realiza la logica del click
+            const resaltarSerie = (serieActual) => {
+                contenedorSeries.filter(d => d.serie !== serieActual )
+                    .attr('opacity', 0.1); 
+                // Mientras que, la serie actual la resaltamos.
+                contenedorSeries.filter(d => d.serie == serieActual)
+                    .attr('opacity', 1);
+                // Llamamos a preprocesarPersonajes(...) para ejecutar crearPersonajes(...). 
+                preprocesarPersonajes(serieActual, false);
+            }
+            // Consideramos los elementos donde al hacer click resaltamos el conjunto de libros. 
+            // Aca tenemos los 3 botones y el conjunto de series de la visualizacion 1. 
+            d3.select('#DragonBall').on('click', (e) => resaltarSerie(e.target.innerText));
+            d3.select('#DragonBallGT').on('click', (e) => resaltarSerie(e.target.innerText));
+            d3.select('#DragonBallZ').on('click', (e) => resaltarSerie(e.target.innerText));
+            contenedorSeries.on('click', (_, datoActual) => resaltarSerie(datoActual.serie)); 
     })
 
 
