@@ -244,7 +244,9 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
     // 1. Filtrar, cuando corresponde, por poder_aumenta > 10
     // Completar aquí
     if (filtrar_dataset) {
+        console.log('datos antes', datos)    
         datos = datos.filter(d => d.poder_aumenta > 10)
+        console.log('datosfiltrados', datos)
     }
     
     // 2. Ordenar, según corresponda, los personajes. Completar aquí
@@ -355,7 +357,7 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
                 personaje.append('text')
                     .text(d => d.personaje)
                     .attr('class', 'nombre')
-                    .attr('fill', 'lightgray')
+                    .attr('fill', 'white')
                     .attr('text-anchor', 'middle')
                     .attr('x', 0)
                     .attr('y', -20)
@@ -390,7 +392,7 @@ function crearPersonajes(dataset, serie, filtrar_dataset, ordenar_dataset) {
                     .transition('update-nombre')
                     .duration(500)
                     .text(d => d.personaje)
-                
+                // Actualizamos el aura del poder maximo. 
                 update.select('.aura')
                     .transition('aura-update')
                     .duration(500)

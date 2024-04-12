@@ -2,9 +2,9 @@
 :root {
     --body-bg-color: linear-gradient(
         180deg,
-        rgb(158, 85, 11),
+        rgb(255, 128, 0) 20%,
         rgb(0, 0, 0),
-        rgb(61, 4, 4)
+        rgb(249, 22, 22) 
     );
     --header-bg-color: rgb(200, 102, 5);
     --header-bg-shdw:  rgb(247, 158, 69);
