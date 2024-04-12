@@ -22,12 +22,13 @@
 html {
     box-sizing: border-box;
     scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     
 }
 
 h1 {
     font-size: 2rem;
+    text-align: center;
 }
 
 body {
@@ -41,9 +42,6 @@ body {
 
 /* ----- COMMON TAGS -------- */
 
-h1, header p {
-    text-align: center;
-}
 
 header p {
     color: var(--header-text-color);
@@ -52,7 +50,7 @@ header p {
 header, section{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    
 }
 
 header, section {
@@ -68,13 +66,20 @@ header {
 }
 
 header {
-    padding: 1rem;
+    padding: 2rem 7rem 4rem 7rem;
     box-shadow: 0rem 1rem 3rem 1rem var(--header-bg-shdw);
 }
 
 header h1 {
     color: var(--header-title-color);
     text-shadow: 0rem 0rem 2rem var(--header-title-shdw);
+    margin: 0;
+    padding: 0;
+}
+
+header p {
+    margin: 0.3em;
+    
 }
 
 
@@ -83,23 +88,29 @@ section {
     scroll-snap-align: center;
     height: 60vh;
     padding: 1rem;
-    margin: 6rem 0;
+    margin: 6rem 10rem;
 }
 section h1, section p {
     text-shadow: 0rem 0rem 1.5rem var(--section-title-shdw);
+    text-align: center;
 }
 
 #title {
-    font-size: 3.5rem;
+    font-size: 5rem;
 }
 
 #label {
     font-style: italic;
+    font-weight: bold;
+    padding: 1rem 0;
+    text-align: center;
 }
 
 button {
+    display: block;
+    max-width: 20rem;
     padding: 1rem 1.5rem;
-    margin: 0;
+    margin: 0 auto;
     background-color: transparent;
     border: 1px solid white;
     border-radius: .5rem;
@@ -146,8 +157,16 @@ footer a:hover {
     font-weight: bold;
     color: rgb(234, 157, 157);
 }
+
 .row {
     display: inline-flex;
     gap: 1rem;
+    
+}
+.col {
+    display: flex;
+    flex-direction: column;
+    
+    
 }
 

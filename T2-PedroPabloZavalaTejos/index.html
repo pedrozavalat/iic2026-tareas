@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="index.css">
     <title>Tarea 2</title>
+    <!-- Recomiendo ver la pagina en 80% -->
 </head>
 <body>
     <header id="information">
         <h1 id="title">Visualización Dragon Ball</h1>
         <p id="label">En honor a mangaka Akira Toriyama</p>
-        <p>
-            La siguiente visualizacion contiene informacion importante con respecto a la creacion 
-            mas conocida de Akira Toriyama. En esta visualizacion mostramos datos importantescon 
-            respecto a cada saga de Dragon Ball: Dragon Ball, Dragon Ball Z y Dragon Ball GT. 
-            Estas visualizaciones fueron desarrolladas con la libreria D3 de JavaScript. 
-            
-            DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion
-            DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion
-            DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion
-            DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion
-            DescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcionDescripcion
+        <h3>Detalles generales</h3>
+        <p class="row">
+            La siguiente visualizacion contiene informacion importante sobre la creacion 
+            mas conocida de Akira Toriyama. En esta visualizacion se muestran datos de
+            cada saga de Dragon Ball: Dragon Ball, Dragon Ball Z y Dragon Ball GT. 
+            Esta visualizacion se divide en dos visualizaciones. La primera ilustra para 
+            cada serie un conjunto 3 libros, donde cada libro representa atributos de la serie. 
+            Mientras que, la segunda visualizacion muestra todos los personajes para cada serie en especifico.
         </p>
+        <h4>Bonus</h4>
+        <p>
+            Se implementaron ambos bonus en las visualizaciones. 
+        </p>
+        <ol>
+            <li><p>
+                En el bonus de responsive, ambas visualizaciones disminuyen de tamaño cuando el ancho de 
+                la ventana es menor a 1000px. 
+            </p></li>
+            <li><p>
+                Para poder visualizar el maximo poder de un personaje, implementamos
+                un SVG circle. Si el personaje tiene mayor poder, el circulo es mas grande.
+                También, interpretamos este atributo con una escala de colores, donde a mayor poder,
+                mas amarillo es el circulo, mientras que menos poder, es mas azul. 
+            </p></li>
+        </ol>
     </header>
     <main>
         <section id="visualization">
@@ -43,7 +57,18 @@
                 Dragon Ball Data-Set
             </a></p>
         </span>
-        <span class="column"><span class="bolder"><p>Referencias:</p></span>[TODO]</span>
+        <span class="column"><span class="bolder"><p>Referencias:</p></span></span>
+        <ul>
+            <li> https://hernan4444.github.io/iic2026/otros/barchart-with-piechart/. Utilice
+                esta fuente para poder realizar el tooltip. Me base en la estructura, ya que realice algunos
+                cambios (como el texto HTML y atributos CSS). 
+            </li>
+            <li>
+                Gran parte parte de mi codigo fue basado en la Ayudantia 3. Fue una base para poder
+                desarrollar los requisitos principales de la tarea. 
+            </li>
+        </ul>
+        
         
         
     </footer>

@@ -43,4 +43,11 @@ svg {
 }
 
 /* Completar este archivo con los que estime conveniente */
-
+/* Responsive para tooltip */
+@media screen and (max-width: 1000px) {
+    .tooltip {
+        height: 180px;
+        width: 200px;
+        font-size: .5rem;
+    }
+}
