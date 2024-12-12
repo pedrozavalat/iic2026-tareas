@@ -1,4 +1,5 @@
 # Tareas del ramo Visualizacion de la Información (IIC2026)
+Fecha: Primer semestre, 2024. 
 
 Este repositorio contiene las tareas realizadas en el marco del ramo **Visualizacion de la información** (IIC2026).
 
